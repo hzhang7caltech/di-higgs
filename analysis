@@ -1,0 +1,328 @@
+///The program is supposed to stitch the QCD sample from all of HT togerther to create a histogram 
+///It can also display the di-higgs histograms in the background
+
+
+void data_stitchingCopy1(){
+    TFile* f1= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f2= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f3= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f4= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f5= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f6= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    TFile* f7= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/qcd/QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8_1pb_weighted_Testing_BDTs.root");
+    
+    TFile* files[7] = {f1,f2,f3,f4,f5,f6,f7};
+    TFile* f= TFile::Open("/storage/af/user/nlu/work/HH/ntuples/20210712_regression_v2/option5/combined/BDT/2018/HHSM/GluGluToHHTo4B_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8_1pb_weighted_Testing_BDTs.root");
+    
+    
+
+    //---------------------------
+    //Initialize histograms
+    //---------------------------
+    
+    
+    TH1D* h1pt = new TH1D("h1pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);   
+    TH1D* h2pt = new TH1D("h2pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h3pt = new TH1D("h3pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h4pt = new TH1D("h4pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h5pt = new TH1D("h5pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h6pt = new TH1D("h6pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h7pt = new TH1D("h7pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h8pt = new TH1D("h8pt", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    // TH1D* h8pt = new TH1D("h8pt", "Fat Jet 2 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+
+    
+    TH1D* histspt[7] = {h1pt,h2pt,h3pt,h4pt,h5pt,h6pt,h7pt};
+    
+    
+    TH1D* h1eta = new TH1D("h1eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3);   
+    TH1D* h2eta = new TH1D("h2eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h3eta = new TH1D("h3eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h4eta = new TH1D("h4eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h5eta = new TH1D("h5eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h6eta = new TH1D("h6eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h7eta = new TH1D("h7eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    TH1D* h8eta = new TH1D("h8eta", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3); 
+    // TH1D* h8eta = new TH1D("h8eta", "Fat Jet 2 Eta Histogram; Eta; Events", 50, -3, 3); 
+
+    
+    TH1D* histseta[7] = {h1eta,h2eta,h3eta,h4eta,h5eta,h6eta,h7eta};
+    
+    TH1D* h1phi = new TH1D("h1phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5);   
+    TH1D* h2phi = new TH1D("h2phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h3phi = new TH1D("h3phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h4phi = new TH1D("h4phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h5phi = new TH1D("h5phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h6phi = new TH1D("h6phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h7phi = new TH1D("h7phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    TH1D* h8phi = new TH1D("h8phi", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+    // TH1D* h8phi = new TH1D("h8phi", "Fat Jet 2 Phi Histogram; Phi; Events", 50, -3.5, 3.5); 
+
+    
+    TH1D* histsphi[7] = {h1phi,h2phi,h3phi,h4phi,h5phi,h6phi,h7phi};
+    
+    
+    TH1D* h1m = new TH1D("h1m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250);   
+    TH1D* h2m = new TH1D("h2m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h3m = new TH1D("h3m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h4m = new TH1D("h4m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h5m = new TH1D("h5m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h6m = new TH1D("h6m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h7m = new TH1D("h7m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    TH1D* h8m = new TH1D("h8m", "Fat Jet 1 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+    // TH1D* h8m = new TH1D("h8m", "Fat Jet 2 MassSD Histogram; MassSD/GeV; Events", 50, 50, 250); 
+
+    
+    TH1D* histsm[7] = {h1m,h2m,h3m,h4m,h5m,h6m,h7m};
+    
+    TH1D* h1pnx = new TH1D("h1pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1);   
+    TH1D* h2pnx = new TH1D("h2pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h3pnx = new TH1D("h3pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h4pnx = new TH1D("h4pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h5pnx = new TH1D("h5pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h6pnx = new TH1D("h6pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h7pnx = new TH1D("h7pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    TH1D* h8pnx = new TH1D("h8pnx", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+    // TH1D* h8pnx = new TH1D("h8pnx", "Fat Jet 2 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1);
+    
+    TH1D* histpnx[7] = {h1pnx,h2pnx,h3pnx,h4pnx,h5pnx,h6pnx,h7pnx};
+    
+    //---------------------------
+    //Setup Constants
+    //---------------------------
+    float lumi = 59830.0;
+    float tsgw = 315226.0;
+    
+    
+    //---------------------------
+    //Setting up total sum of genWeight (single use)
+    //---------------------------
+    
+//     float tsgw = 0.0; //Total sum of genWeight across all of HT
+//     for (int filenum = 0; filenum < 7; ++ filenum) {
+//         TTree* tree = (TTree*)files[filenum]->Get("Events");
+//         Int_t nentries = tree->GetEntries();
+//         float gw;
+//         float sgw = 0.0;
+//         tree->SetBranchAddress("genWeight", &gw);
+//         for (int index = 0; index < nentries; ++index) {
+//             tree->GetEntry(index);
+//             sgw = sgw + gw;
+//         }   
+//         cout << sgw << endl;
+//         tsgw = tsgw + sgw;
+        
+//     }
+//     cout << "total sum of genWeight is: " << tsgw << endl;
+    
+    
+    
+    
+    for (int filenum = 0; filenum < 7; ++ filenum) {
+        TTree* tree = (TTree*)files[filenum]->Get("Events");
+        Int_t nentries = tree->GetEntries();
+
+        float fj1pt;
+        float fj1eta;
+        float fj1phi;
+        float fj1m;
+        float fj1pnx;
+        float fj2pt;
+        float fj2eta;
+        float fj2phi;
+        float fj2m;
+        float fj2pnx;
+        float xsecweight;
+        float gw;
+        float w;
+        float weight;
+
+        tree->SetBranchAddress("genWeight", &gw);
+        tree->SetBranchAddress("fatJet1Pt", &fj1pt);
+        tree->SetBranchAddress("fatJet1Eta", &fj1eta);
+        tree->SetBranchAddress("fatJet1Phi", &fj1phi);
+        tree->SetBranchAddress("fatJet1MassSD", &fj1m);
+        tree->SetBranchAddress("fatJet1PNetXbb", &fj1pnx);
+        tree->SetBranchAddress("fatJet2Pt", &fj2pt);
+        tree->SetBranchAddress("fatJet2Eta", &fj2eta);
+        tree->SetBranchAddress("fatJet2Phi", &fj2phi);
+        tree->SetBranchAddress("fatJet2MassSD", &fj2m);
+        tree->SetBranchAddress("fatJet2PNetXbb", &fj2pnx);
+        tree->SetBranchAddress("xsecWeight",&xsecweight);
+        tree->SetBranchAddress("weight",&weight);
+        
+        
+        float sgw = 0.0;
+        for (int index = 0; index < nentries; ++index) {
+            tree->GetEntry(index);
+            sgw = sgw + gw;
+        }
+        
+        bool isHH = false;
+        for (int index = 0; index < nentries; ++index) {
+            tree->GetEntry(index);
+            /////////////////////////////////////
+            ////////////////////////////////////
+            //Very IMPORTANT
+            //Irene told me use the formula <float w = lumi * xsecweight * (isHH? weight : gw/sgw);> here 
+            //Nan suggessted I try to sum all the genWeight and use <float w = lumi * xsecweight * (isHH? weight : gw/tsgw);>
+            //What Nan suggested solved the weird spiking porblem but that will make the integral not coming out right, 
+            //I am not sure what is right
+            ////////////////////////////////////
+            float w = lumi * xsecweight * (isHH? weight : gw/tsgw);
+            bool masscut;
+            if (fj1m > 50) {masscut = true;}
+            else {masscut = false;}
+            if (true) {
+                histspt[filenum]->Fill(fj1pt, w);
+                histseta[filenum]->Fill(fj1eta, w);
+                histsphi[filenum]->Fill(fj1phi, w);
+                histsm[filenum]->Fill(fj1m, w);
+                histpnx[filenum]->Fill(fj1pnx, w);
+            }
+        }
+        // for (int index = 0; index < nentries; ++index) {
+        //     tree->GetEntry(index);
+        //     float w = lumi * xsecweight * (isHH? weight : gw/tsgw);
+        //     bool masscut;
+        //     if (fj2m > 50) {masscut = true;}
+        //     else {masscut = false;}
+        //     if (masscut) {
+        //         histspt[filenum]->Fill(fj2pt, w);
+        //         histseta[filenum]->Fill(fj2eta, w);
+        //         histsphi[filenum]->Fill(fj2phi, w);
+        //         histsm[filenum]->Fill(fj2m, w);
+        //     }
+        // }
+        bool omit_first_two_HT;
+        if(filenum != 0 && filenum != 1) {omit_first_two_HT = true;}
+        if(true){h8pt->Add(histspt[filenum]);
+                        h8eta->Add(histseta[filenum]);
+                        h8phi->Add(histsphi[filenum]);
+                        h8m->Add(histsm[filenum]);
+                        h8pnx->Add(histpnx[filenum]);
+                        }
+    }
+    
+    
+    
+    TTree* tree = (TTree*)f->Get("Events");
+    float fj1pt;
+    tree->SetBranchAddress("fatJet1Pt", &fj1pt);
+    float fj1eta;
+    tree->SetBranchAddress("fatJet1Eta", &fj1eta);
+    float fj1phi;
+    tree->SetBranchAddress("fatJet1Phi", &fj1phi);
+    float fj1msd;
+    tree->SetBranchAddress("fatJet1MassSD", &fj1msd);
+    float fj1pnx;
+    tree->SetBranchAddress("fatJet1PNetXbb", &fj1pnx);
+    float fj2pt;
+    tree->SetBranchAddress("fatJet2Pt", &fj2pt);
+    float fj2eta;
+    tree->SetBranchAddress("fatJet2Eta", &fj2eta);
+    float fj2phi;
+    tree->SetBranchAddress("fatJet2Phi", &fj2phi);
+    float fj2msd;
+    tree->SetBranchAddress("fatJet2MassSD", &fj2msd); 
+    float fj2pnx;
+    tree->SetBranchAddress("fatJet2PNetXbb", &fj2pnx);
+    
+    float xsecweight;
+    tree->SetBranchAddress("xsecWeight",&xsecweight);
+    float weight;
+    tree->SetBranchAddress("weight",&weight);
+     
+    TH1D* h8pt_s = new TH1D("h8pt_s", "Fat Jet 1 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    TH1D* h8eta_s = new TH1D("h8eta_s", "Fat Jet 1 Eta Histogram; Eta; Events", 50, -3, 3);
+    TH1D* h8phi_s = new TH1D("h8phi_s", "Fat Jet 1 Phi Histogram; Phi; Events", 50, -3.5, 3.5);
+    TH1D* h8m_s = new TH1D("h8m_s", "Fat Jet 1 Mass Histogram; MassSD/GeV; Events", 50, 50, 250);
+    TH1D* h8pnx_s = new TH1D("h8pnx_s", "Fat Jet 1 PNetXbb Histogram; PNetXbb; Events", 50, 0, 1); 
+
+    
+    // TH1D* h8pt_s = new TH1D("h8pt_s", "Fat Jet 2 Pt Histogram; Pt/GeV; Events", 50, 230, 3000);
+    // TH1D* h8eta_s = new TH1D("h8eta_s", "Fat Jet 2 Eta Histogram; Eta; Events", 50, -3, 3);
+    // TH1D* h8phi_s = new TH1D("h8phi_s", "Fat Jet 2 Phi Histogram; Phi; Events", 50, -3.5, 3.5);
+    // TH1D* h8m_s = new TH1D("h8m_s", "Fat Jet 2 Mass Histogram; MassSD/GeV; Events", 50, 50, 250);
+    
+    Int_t nentries = tree->GetEntries();
+    bool isHH = true;
+    for (int index = 0; index < nentries; ++index) {
+        tree->GetEntry(index);
+        float w = lumi * xsecweight * weight;
+        if(fj1pt != 0 && fj1msd > 50) {h8pt_s->Fill(fj1pt, w);
+                        h8eta_s->Fill(fj1eta, w);
+                        h8phi_s->Fill(fj1phi, w);
+                        h8m_s->Fill(fj1msd, w);
+                        h8pnx_s->Fill(fj1pnx, w);}
+    }
+    
+    // for (int index = 0; index < nentries; ++index) {
+    //     tree->GetEntry(index);
+    //     float w = lumi * xsecweight * weight;
+    //     if(fj2pt != 0 && fj2msd > 50) {h8pt_s->Fill(fj2pt, w);
+    //                     h8eta_s->Fill(fj2eta, w);
+    //                     h8phi_s->Fill(fj2phi, w);
+    //                     h8m_s->Fill(fj2msd, w);}
+    // }
+    
+    
+    h8pt_s->SetLineColor(kRed); 
+    h8eta_s->SetLineColor(kRed);
+    h8phi_s->SetLineColor(kRed); 
+    h8m_s->SetLineColor(kRed);
+    // h8pnx_s->SetLineColor(kRed);
+
+
+
+    TCanvas* c1 = new TCanvas("fjet1_masscut_corrected", "Jet1 Histograms", 1000, 1000);
+    gStyle->SetOptStat(111111111);    
+    
+    
+    h8pt->Scale(1/h8pt->Integral());
+    h8pt_s->Scale(1/h8pt_s->Integral());
+    h8eta->Scale(1/h8eta->Integral());
+    h8eta_s->Scale(1/h8eta_s->Integral());
+    h8phi->Scale(1/h8phi->Integral());
+    h8phi_s->Scale(1/h8phi_s->Integral());
+    h8m->Scale(1/h8m->Integral());
+    h8m_s->Scale(1/h8m_s->Integral());
+    h8pnx->Scale(1/h8pnx->Integral());
+    h8pnx_s->Scale(1/h8pnx_s->Integral());
+
+
+    
+    c1-> Divide(2,2);
+    c1-> cd(1);  
+    gPad->SetLogy();
+    
+    h8pt->Draw("HIST SAME");
+    h8pt_s->Draw("HIST SAME");
+
+    c1-> cd(2);
+    
+
+    h8eta_s->Draw("HIST SAME");
+    h8eta->Draw("HIST SAME"); 
+
+    c1-> cd(3);
+    
+    h8phi_s->Draw("HIST SAME");
+    h8phi->Draw("HIST SAME");
+
+
+    
+    
+    c1-> cd(4);
+    h8m_s->Draw("HIST SAME");
+    h8m->Draw("HIST SAME");
+    
+
+    
+//     h8pnx->Draw("HIST");
+//     gPad->SetLogy();
+//     h8pnx_s->Draw("HIST SAME");
+//     h8pnx->Draw("HIST SAME");
+
+    
+}
